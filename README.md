@@ -11,6 +11,11 @@ But there are some difference in the language
 ## coming up next
 - Spans for tokens
 - More NLP tools and adding labels
+  - POS
+  - Semantic Roles like NER
+  - IOB format for chunk labels
+  - Dependency trees 
 - Named capturing
 - Macros:
 - Matching multiple regular expressions
+

@@ -11,17 +11,17 @@ class TokenRegex:
         self.machine = self.compile(parsed_token_regex_string)
 
     def match_tokens(self, input_tokens):
+        final_results = []
         for start_point in range(len(input_tokens)):
             sub_input_tokens = input_tokens[start_point:]
-
             result_set = self.machine.runAll(sub_input_tokens)
             if result_set:
                 for result in result_set:
                     for group in result:
                         for item in group:
                             print item.get_text()
-
-            # TODO return results
+                final_results += result_set
+        return final_results
 
     def parse_a_segment_info(self, segment_string):
         r"""
