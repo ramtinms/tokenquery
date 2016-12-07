@@ -1,6 +1,6 @@
-from nlp.tokenizer import Tokenizer
-from nlp.pos_tagger import POSTagger
-from tokenregex import TokenRegex
+from tokenregex.nlp.tokenizer import Tokenizer
+from tokenregex.nlp.pos_tagger import POSTagger
+from tokenregex.tokenregex import TokenRegex
 import unittest
 
 class TestTokenRegex(unittest.TestCase):

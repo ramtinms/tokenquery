@@ -1,7 +1,9 @@
-import re 
+import re
+
 
 class Token:
-    def __init__(self, token_text, span_start, span_end):
+    def __init__(self, token_id, token_text, span_start, span_end):
+        self.token_id = token_id
         self.token_text = token_text
         self.span_start = span_start
         self.span_end = span_end

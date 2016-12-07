@@ -1,6 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
+# def is_number(s):
+#     try:
+#         float(s) if '.' in s else int(s)
+#         return True
+#     except ValueError:
+#         return False
+
+
+
+# # basic operations like
+# URL detection 
+# Hashtag detection 
+# Emoji dete
+
+
 import re
 
 class EmailDetector():
@@ -55,6 +71,8 @@ class ColorDetector():
         self.color_code_regex = r'([0-9a-f]{6}|[0-9a-f]{3})'
 
     def detect(self, text):
+
+        # schema:color
 
         # span, content
 

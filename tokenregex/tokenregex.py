@@ -1,6 +1,6 @@
 import re
-from models.fsa import State
-from models.fsa import StateMachine
+from .models.fsa import StateMachine
+from .models.fsa import State
 
 
 class TokenRegex:
@@ -16,10 +16,10 @@ class TokenRegex:
             sub_input_tokens = input_tokens[start_point:]
             result_set = self.machine.runAll(sub_input_tokens)
             if result_set:
-                for result in result_set:
-                    for group in result:
-                        for item in group:
-                            print item.get_text()
+                # for result in result_set:
+                #     for group in result:
+                #         for item in group:
+                #             print item.get_text()
                 final_results += result_set
         return final_results
 
@@ -251,7 +251,7 @@ if __name__ == "__main__":
     unit = TokenRegex(test_case_0)
     unit.match_tokens(input_tokens)
 
-    print "<>"*25
+    # print "<>"*25
 
     test_case_1 = '([ner:"PERSON"]+) [pos:"VBZ"] [/an?/] ["painter"]'
     unit = TokenRegex(test_case_1)

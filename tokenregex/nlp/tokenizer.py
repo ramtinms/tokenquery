@@ -1,6 +1,6 @@
 
 from nltk.tokenize import word_tokenize
-from models.token import Token
+from tokenregex.models.token import Token
 from nltk.tokenize.regexp import RegexpTokenizer
 from nltk.tokenize import WhitespaceTokenizer
 
@@ -41,20 +41,22 @@ class Tokenizer:
 
         if self.tokenizer_type == "SpaceTokenizer":
             operator = RegexpTokenizer('\w+|\$[\d\.]+|\S+')
-            for span in operator.span_tokenize(text):
-                new_token = Token(text[span[0]:span[1]], span[0], span[1])
+            for counter, span in enumerate(operator.span_tokenize(text)):
+                new_token = Token(counter, text[span[0]:span[1]], span[0], span[1])
                 tokens.append(new_token)
 
         elif self.tokenizer_type == "NLTKWhiteSpaceTokenizer":
             operator = WhitespaceTokenizer()
-            for span in operator.span_tokenize(text):
-                new_token = Token(text[span[0]:span[1]], span[0], span[1])
+            for counter, span in enumerate(operator.span_tokenize(text)):
+                new_token = Token(counter, text[span[0]:span[1]], span[0], span[1])
                 tokens.append(new_token)
 
         elif self.tokenizer_type == "PTBTokenizer":
             ptb_tokens = word_tokenize(text)
+            counter = 0
             for token, span in self._penn_treebank_tokens_with_spans(text, ptb_tokens):
-                new_token = Token(token, span[0], span[1])
+                new_token = Token(counter, token, span[0], span[1])
+                counter += 1
                 tokens.append(new_token)
 
         return tokens
