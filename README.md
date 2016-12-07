@@ -79,6 +79,7 @@ We belive a big portion of NLP information can be expressed in terms of labels o
     And we can query member inside clusters by tokenregexes like this:
   `[bcluster:/100000110[0-1]+/])`
    which will match all of these and more. for more info see Miller et al., NAACL 2004
+   
     | word | code |
     |--------|-----|
     | lawyer | 1000001101000 |
@@ -98,7 +99,9 @@ We belive a big portion of NLP information can be expressed in terms of labels o
     | janitor | 1000001101100101 |
     | saleswoman | 1000001101100110 |
 
+
 - Word embeddings
+
   for word embeddings you can use exact match. Hopefully in the future we might implement more fancy metrics for comparision like cosine similarity. 
   e.g. `[w2v:"A0F892"])`
 
@@ -106,18 +109,23 @@ We belive a big portion of NLP information can be expressed in terms of labels o
   For chunks we recommend to use IOB format
 
 - Noun phrases 
+
   We use label `NPH` for noun phrase, `BNP` as a value for starting a noun phrase and `INP` for Continue of a noun phrase. Or you can use directly `BNP` as lable and keep the value for the id of that phrase in your knowledge base if any.
 
 ### DAGs
+
 - Rdfs 
+
 - Semantic Roles
+
 - Depdencing parsing
+
   [Parrent:['']]
 
 ### Trees 
 
 
-#### integerated tools
+## How to use
 
 ### A note on tokenization 
 
