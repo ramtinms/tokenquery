@@ -1,3 +1,7 @@
+<p align="left">
+  <img src="https://raw.githubusercontent.com/ramtinms/tokenregex/master/resources/tokenregex_logo.png" width="350"/>
+</p>
+
 # Tokenregex (regular expressions over tokens)
 **Tokenregex** is a query language over sequence of tokens; very similar to regular expressions but on top of tokens. The orginal idea is not new and is taken from *Angel Chang* and *Christopher Manning* presented in [this paper](http://nlp.stanford.edu/pubs/tokensregex-tr-2014.pdf). They have implemeneted it (TOKENSREGEX) in Java inside *Stanford CoreNLP* software package. Note that the language we use here is a little bit different.
 
