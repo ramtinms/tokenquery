@@ -67,6 +67,8 @@ for example `([ner:"PERSON"]+) [pos:"VBZ"] [/an?/] ["painter"]` return a group c
 We belive a big portion of NLP information can be expressed in terms of labels on top of tokens. Here is a list of the ones currently we use and how we represent it. Please note that you can define your own lables and there is no limitation in theory for this package.
 - Part Of Speech tags (e.g. `[pos:/V.*/]`)
 
+- Lemma  (e.g. `[lemma:'be']`)
+
 - Named-Entity tags (e.g. `[ner:"PERSON"]`)
 
 - Brown clusters
@@ -107,14 +109,6 @@ We belive a big portion of NLP information can be expressed in terms of labels o
 
 - Noun phrases 
   We use label `NPH` for noun phrase, `BNP` as a value for starting a noun phrase and `INP` for Continue of a noun phrase. Or you can use directly `BNP` as lable and keep the value for the id of that phrase in your knowledge base if any.
-
-### DAGs
-- Rdfs 
-- Semantic Roles
-- Depdencing parsing
-  [Parrent:['']]
-
-### Trees 
 
 
 #### integerated tools
@@ -177,3 +171,5 @@ token_regex_4 = TokenRegex('([ner:"PERSON"]+) [pos:"VBZ"] [/an?/] [pos:"JJ"]* ["
 token_regex_4.match_tokens(input_tokens)
     
 ```
+
+### Triple extraction
