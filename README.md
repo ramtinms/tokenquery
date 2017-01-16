@@ -6,74 +6,35 @@
 
 
 # What is a `Token`?
-In order to process text (natural language text), the common approach for natural language processing (NLP) is to break the text down into smaller processing units (tokens). Options include phonemes, morphemes, lexical information, phrases, sentences, or paragraphs. 
+In order to process text (natural language text), the common approach for natural language processing (NLP) is to break the text down into smaller processing units (tokens). Options include phonemes, morphemes, lexical information, phrases, sentences, or paragraphs. For example, this sentence :`President Obama delivered his Farewell Address in Chicago on January 10, 2017.` can be divided into tokens shown in blue highlights. 
 
 
 <p align="left">
   <img src="https://raw.githubusercontent.com/ramtinms/tokenregex/master/resources/TokenQuery_example_1.png" />
 </p>
+Inside TokenQuery each token contains a text (textual content of token), start and end index of the span inside the original text and a set of labels (i.e. key/value pairs) provided by NLP engines. In our example, the red labels (POS tags) are coming from Stanford POS tagger, the orange labels are from Google NLP API, and purple ones are coming from an internal topic extractor. One of the challeneges for natural language processing, is the fact that each unit is providing isolated information about each token in different formats and currently is really hard to have a query considering labels coming from different processing units. 
 
-
-e.g.  sentence
-`President Obama delivered his Farewell Address in Chicago on January 10, 2017.`
-
-# colors from different engines 
-
-
-
-tokens 
-
-Currently many NLP engines extracts information from a text and provide those information in the format of diverse set of labels over tokens. TokenQuery
-- Enables us to combine labels from different NLP engines 
+TokenQuery enables us to 
+- Combine labels from different NLP engines 
 - Query and reasoning over tokenized text
-- Defining extentions for labeled-based processing
+- Defining extentions for desired query functions
 
 
- token sequences
-
-
-
-
-One of the challeneges for natural language processing, is the fact that each unit is providing isolated information about each token in different formats and currently is really hard to have a query considering labels coming from different processing units. 
-
-
-
-
-#############################
-Data modeling
-In NLP applications, text is typically tokenized into
-units of characters (tokens).
-tokens are mutli-faceted information 
-Each token contains few properties. 
-Each token contains few basic fields and fields key, value pairs 
-specials fields 
-    text (textual content of token)
-    start_offset
-    end_offset
-    meta
-
-You can define as many labels (key/values pairs) you want for each token and check if each label matches or not. 
-
-#################################
-
-
-In tokenregex, each token contains a text, start offset and end offset of the span inside the original text, and a list of key value pairs which we call the key as label and the value as the value for that label. 
-
-# Where the idea came from.
+### Where the idea came from.
 The inital idea came from *Angel Chang* and *Christopher Manning* presented in [this paper](http://nlp.stanford.edu/pubs/tokensregex-tr-2014.pdf). They have implemeneted it (TOKENSREGEX) in Java inside *Stanford CoreNLP* software package. Our version uses a different language for the query which is extensible, more structured, and supporting more features. 
 
 
-# Tokenregex language
+# TokenQuery language
 The language is defined as follow. Each query consists of a group of tokens shown each inside `[` `]`s. If you want to use `]` inside your token matches you can simply use `\` to skip.
 
 
 ```
 [expr_for_token1][expr_for_token2][expr_for_token3]
 ```
-which means we are searching for a sequence of three tokens that the first token satisfies the condition provided by expr_for_token1, the second token satisfies the condition provided by expr_for_token2 and so on. 
+which means we are searching for a sequence of three tokens that the first token satisfies the condition provided by `expr_for_token1`, the second token satisfies the condition provided by `expr_for_token2` and so on. 
 
 ## Quantifiers
-Likewise regular expressions, you can use quantifiers to have more compact tokenregexes. For example the following query will match zero or more tokens satisfying the condition provided by expr_for_token1 followed by another token satisfies condition provided by expr_for_token2.
+Likewise regular expressions, you can use quantifiers to have more compact queries. For example, the following query will match zero or more tokens satisfying the condition provided by `expr_for_token1` followed by another token satisfies condition provided by `expr_for_token2`.
 ```
 [expr_for_token1]*[expr_for_token2]
 ```
@@ -87,16 +48,18 @@ Likewise regular expressions, you can use quantifiers to have more compact token
 | `{x,y}` | between x and y number of times | `[expr_for_token]{3,5}` |
 
 
-## Capturing and Groups
+## Capturing Groups
 Like reguar expressions, you can define capturing groups by parentheses. 
 for example `([expr_for_token1]+) [expr_for_token2] [expr_for_token3]` returns a group containing sequence of tokens with satisfies the condition provided by expr_for_token1. Hence, `([expr_for_token1]+) [expr_for_token2] ([expr_for_token3])` returns two groups with a list of tokens matched inside each parentheses. 
 
 If you don't provide any, it will capture all as a single group. For example, `[expr_for_token1]+ [expr_for_token2] [expr_for_token3]` is equal to `([expr_for_token1]+ [expr_for_token2] [expr_for_token3])`.
 
+You can also use named capturing by using `(?name <desired_pattern>)` for example
+`(?token1 [expr_for_token1])` captures results under the name of 'token1'.
 
 
 ## Token Expression
-Expressions (like `expr_for_token1` in the above examples) can be viewed as a list of acceptors for each token. 
+Expressions (like `expr_for_token1` in the above examples) can be viewed as a list of acceptors for each token.
 
 # Basic expressions
 `[label:operation(operation_input)]` is the base form for defining a token expression, in which, `label` selects the value for the label from the token and `operation` is the required operation on top of this value which return True or False. Operations can also get extra input strings which is provided by `operation_input`. 
@@ -112,17 +75,15 @@ Here is the list of predefined operations. Note that in this framework an extion
 
   str_eq 
 
+  e.g. `[str_eq(Obama)]` , `[pos:str_eq(VBZ)]`
+
+
   str_reg
 
   str_len
 
-
-
-  Examples 
-
-  Shortened versions, 
-  
-  Exact string match is possible by having the text you want to match inside `"`s.
+ Shortened versions,   
+  For the convinence of using, exact string match is possible by having the text you want to match inside `"`s.
 For example `["painter"]` will match any token that its text is `painter` but not `Painter`.
 
 ### Regex match 
