@@ -1,20 +1,130 @@
 <p align="left">
-  <img src="https://raw.githubusercontent.com/ramtinms/tokenregex/master/resources/tokenregex_logo.png" width="350"/>
+  <img src="https://raw.githubusercontent.com/ramtinms/tokenregex/master/resources/Token_query_logo.png" width="350"/>
 </p>
 
-# Tokenregex (regular expressions over tokens)
-**Tokenregex** is a query language over sequence of tokens; very similar to regular expressions but on top of tokens. The orginal idea is not new and is taken from *Angel Chang* and *Christopher Manning* presented in [this paper](http://nlp.stanford.edu/pubs/tokensregex-tr-2014.pdf). They have implemeneted it (TOKENSREGEX) in Java inside *Stanford CoreNLP* software package. Note that the language we use here is a little bit different.
 
-## How to install 
+# TokenQuery
+**TokenQuery** is a query language over any labeled text (sequence of tokens); very similar to regular expressions but on top of tokens. TokenQuery can be viewed as an interface to query for specific patterns in a sequence of tokens using information provided by diverse NLP engines.
+
+
+# What is a `Token`?
+In order to process text (natural language text), the common approach for natural language processing (NLP) is to break the text down into smaller processing units (tokens). Options include phonemes, morphemes, lexical information, phrases, sentences, or paragraphs. 
+
+
+<p align="left">
+  <img src="https://raw.githubusercontent.com/ramtinms/tokenregex/master/resources/TokenQuery_example_1.png" width="350"/>
+</p>
+
+
+e.g.  sentence
+`President Obama delivered his Farewell Address in Chicago on January 10, 2017.`
+
+# colors from different engines 
+
+
+
+tokens 
+
+Currently many NLP engines extracts information from a text and provide those information in the format of diverse set of labels over tokens. TokenQuery
+- Enables us to combine labels from different NLP engines 
+- Query and reasoning over tokenized text
+- Defining extentions for labeled-based processing
+
+
+ token sequences
+
+
+
+
+One of the challeneges for natural language processing, is the fact that each unit is providing isolated information about each token in different formats and currently is really hard to have a query considering labels coming from different processing units. 
+
+
+
+
+#############################
+Data modeling
+In NLP applications, text is typically tokenized into
+units of characters (tokens).
+tokens are mutli-faceted information 
+Each token contains few properties. 
+Each token contains few basic fields and fields key, value pairs 
+specials fields 
+    text (textual content of token)
+    start_offset
+    end_offset
+    meta
+
+You can define as many labels (key/values pairs) you want for each token and check if each label matches or not. 
+
+#################################
+
+
+In tokenregex, each token contains a text, start offset and end offset of the span inside the original text, and a list of key value pairs which we call the key as label and the value as the value for that label. 
+
+# Where the idea came from.
+The inital idea came from *Angel Chang* and *Christopher Manning* presented in [this paper](http://nlp.stanford.edu/pubs/tokensregex-tr-2014.pdf). They have implemeneted it (TOKENSREGEX) in Java inside *Stanford CoreNLP* software package. Our version uses a different language for the query which is extensible, more structured, and supporting more features. 
+
+
+# Tokenregex language
+The language is defined as follow. Each query consists of a group of tokens shown each inside `[` `]`s. If you want to use `]` inside your token matches you can simply use `\` to skip.
+
+
 ```
-pip install tokenregex
+[expr_for_token1][expr_for_token2][expr_for_token3]
+```
+which means we are searching for a sequence of three tokens that the first token satisfies the condition provided by expr_for_token1, the second token satisfies the condition provided by expr_for_token2 and so on. 
+
+## Quantifiers
+Likewise regular expressions, you can use quantifiers to have more compact tokenregexes. For example the following query will match zero or more tokens satisfying the condition provided by expr_for_token1 followed by another token satisfies condition provided by expr_for_token2.
+```
+[expr_for_token1]*[expr_for_token2]
 ```
 
-## Language Definition
-**Tokens** are smallest processing units and each token is express inside `[` `]`. If you want to use `]` inside your token matches you can simply use `\` to skip.
+|----|----|----| 
+| type | occurrence | example |
+| `?` | once or not at all | `[expr_for_token]?` |
+| `*` | zero or more times | `[expr_for_token]*` |
+| `+` | one or more times | `[expr_for_token]+` |
+| `{x}` | x number of times | `[expr_for_token]{3}` |
+| `{x,y}` | between x and y number of times | `[expr_for_token]{3,5}` |
 
-### Exact match
-Exact string match is possible by having the text you want to match inside `"`s.
+
+## Capturing and Groups
+Like reguar expressions, you can define capturing groups by parentheses. 
+for example `([expr_for_token1]+) [expr_for_token2] [expr_for_token3]` returns a group containing sequence of tokens with satisfies the condition provided by expr_for_token1. Hence, `([expr_for_token1]+) [expr_for_token2] ([expr_for_token3])` returns two groups with a list of tokens matched inside each parentheses. 
+
+If you don't provide any, it will capture all as a single group. For example, `[expr_for_token1]+ [expr_for_token2] [expr_for_token3]` is equal to `([expr_for_token1]+ [expr_for_token2] [expr_for_token3])`.
+
+
+
+## Token Expression
+Expressions (like `expr_for_token1` in the above examples) can be viewed as a list of acceptors for each token. 
+
+# Basic expressions
+`[label:operation(operation_input)]` is the base form for defining a token expression, in which, `label` selects the value for the label from the token and `operation` is the required operation on top of this value which return True or False. Operations can also get extra input strings which is provided by `operation_input`. 
+For example, `[pos:str_eq(VBZ)]` matches any token that has a label `pos` and the string value for that is equal to `VBZ`.
+or `[pos:str_reg(V.*)]` matches any token that has a `pos` label and the value for that label matches regex `V.*`. (i.e. any verbs)
+Note: If you want to check if a label exists or not and you don't care about the value of the label you can simply use this `[pos:str_reg(.*)]`.
+If no label provided the default will consider the text of the token. For example, `[str_reg(.*)]` will match any token or `[str_reg('painter')]` matches any token that has 'painter' as text.
+
+### core operations (acceptors)
+Here is the list of predefined operations. Note that in this framework an extiontion format is considered for your own desired operations.  
+
+## String 
+
+  str_eq 
+
+  str_reg
+
+  str_len
+
+
+
+  Examples 
+
+  Shortened versions, 
+  
+  Exact string match is possible by having the text you want to match inside `"`s.
 For example `["painter"]` will match any token that its text is `painter` but not `Painter`.
 
 ### Regex match 
@@ -24,50 +134,80 @@ For example `[/an?/]` matches tokens having text `a` or `an`.
 `[/km|kilometers?/]` matches `km`, `kilometer` and `kilometers`
 Note that you can use `/` inside the regex without any modification, we only care extra first `/` and last `/`. 
 
-### Label match
-You can define as many labels (key/values pairs) you want for each token and check if each label matches or not. 
-To do so, you should mention label name with colons inside each token match.
-For example, `[pos:"VBZ"]` matches any token that has a label `pos` and the value for that is `VBZ`.
-Furthermore, you can use regex for matching values of lables:
-`[pos:/V.*/]` matches any token that has a `pos` label and is a verb (If this sentence does not make any sense to you have to learn more about `part of speech tagging` first).
+`[len>20]` will check if the len of a token is more than 20
 
-Note: If you want to check if a lable exists or not and you don't care about the value of the label you can simply use this `[pos:/.*/]`.
+
+## Int
+  
+  Examples 
+  
+  int_value
+
+  int_e
+
+  int_g
+
+  int_l
+
+  int_ne
+
+  int_le
+
+  int_ge
+
+
+
+
 
 ### Value match
 Currenlty we only support a limited set of value operation over token. Hopefully in the future we have more operations over each token. 
 
-`[word>30]` will check if the token is an int and greater than 30.
+`[num>30]` will check if the token is an int and greater than 30.
 These comparisions ( >=, <. <=, ==, !=) are also available.
 
-`[len>20]` will check if the len of a token is more than 20
 
-### Quantifiers
-You can use quantifiers to have more compact tokenregexes.
 
-#### `?` once or not at all
-e.g. `[pos:/.*/]?`
+## Web
+  web_is_url
+  web_is_email
+  web_is_hex_code
+  web_is_hashtag
+  web_is_emoji
 
-#### `*` zero or more times
-e.g. `[pos:/.*/]*`
 
-#### `+` one or more times
-e.g. `[pos:/.*/]+`
 
-#### `{x}` x number of times
-e.g. `[pos:/.*/]{3}`
+## Date
 
-#### `{x,y}` between x and y number of times
-(Under Construction)
-e.g. `[pos:/.*/]{3,5}`
+  String iso format
 
-### Compound Expressions
-Currently we don't support Compound Expressions. Soon we support `&` and `|` for compounding.
+  date_is 
+  date_is_after
+  date_is_before
+  date_y_is
+  date_m_is
+  date_d_is
 
-### Capturing and Groups
-Like reguar expressions, you can define capturing groups by parentheses. If you don't provide any, it will capture all as a single group.
-for example `([ner:"PERSON"]+) [pos:"VBZ"] [/an?/] ["painter"]` return a group containing sequence of tokens with named-entity tag of `PERSON`; and `[ner:"PERSON"]+ [pos:"VBZ"] [/an?/] ["painter"]` will return the whole matched tokens containing names, verbs, ... .
 
-## Other NLP info
+# compound expressions
+For each token is possible to compound several basic expressions to support more complex patterns. Compounding is done using `!` (not), `&` (and) and `|` (or) symbols. For example, [!pos:str_reg(V.*)] means any token that it is not a verb. 
+`[pos:str_reg(V.*)&!str_eq(is)]` matches any verb except `is`. 
+
+## what is the priority of compounding
+ The `!` has the highest proiority and the `&` and `|` has same priority and right associative. You can change the priority by using parentheses. 
+```
+!X and Y        <=>   ( (!(X)) and Y )
+!(X and Y)      <=>   ( !(X and Y) )
+!(X and Y) or Z <=>   ( ( !(X and Y) ) or Z )
+(X and Y) or Z  <=>   ( ( X and Y) or Z )
+X and Y or Z    <=>   ( X and (Y or Z) )
+```
+
+## How to install 
+```
+pip install tokenregex
+```
+
+## Other NLP Examples
 We belive a big portion of NLP information can be expressed in terms of labels on top of tokens. Here is a list of the ones currently we use and how we represent it. Please note that you can define your own lables and there is no limitation in theory for this package.
 - Part Of Speech tags (e.g. `[pos:/V.*/]`)
 
