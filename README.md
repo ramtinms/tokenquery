@@ -2,8 +2,6 @@
   <img src="https://raw.githubusercontent.com/ramtinms/tokenregex/master/resources/Token_query_logo.png" width="350"/>
 </p>
 
-
-# TokenQuery
 **TokenQuery** is a query language over any labeled text (sequence of tokens); very similar to regular expressions but on top of tokens. TokenQuery can be viewed as an interface to query for specific patterns in a sequence of tokens using information provided by diverse NLP engines.
 
 
@@ -12,7 +10,7 @@ In order to process text (natural language text), the common approach for natura
 
 
 <p align="left">
-  <img src="https://raw.githubusercontent.com/ramtinms/tokenregex/master/resources/TokenQuery_example_1.png" width="350"/>
+  <img src="https://raw.githubusercontent.com/ramtinms/tokenregex/master/resources/TokenQuery_example_1.png" />
 </p>
 
 
