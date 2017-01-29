@@ -1,5 +1,5 @@
 <p align="left">
-  <img src="https://raw.githubusercontent.com/ramtinms/tokenregex/master/resources/Token_query_logo.png" width="350"/>
+  <img src="https://raw.githubusercontent.com/ramtinms/tokenquery/master/resources/Token_query_logo.png" width="350"/>
 </p>
 
 **TokenQuery** is a query language over any labeled text (sequence of tokens); very similar to regular expressions but on top of tokens. TokenQuery can be viewed as an interface to query for specific patterns in a sequence of tokens using information provided by diverse NLP engines.
@@ -9,7 +9,7 @@
 In order to process text (natural language text), the common approach for natural language processing (NLP) is to break the text down into smaller processing units (tokens). Options include phonemes, morphemes, lexical information, phrases, sentences, or paragraphs. For example, this sentence :`President Obama delivered his Farewell Address in Chicago on January 10, 2017.` can be divided into tokens shown in blue highlights. 
 
 <p align="left">
-  <img src="https://raw.githubusercontent.com/ramtinms/tokenregex/master/resources/TokenQuery_example_1.png" />
+  <img src="https://raw.githubusercontent.com/ramtinms/tokenquery/master/resources/TokenQuery_example_1.png" />
 </p>
 Inside TokenQuery each token contains a text (textual content of token), start and end index of the span inside the original text and a set of labels (i.e. key/value pairs) provided by NLP engines. In our example, the red labels (POS tags) are coming from Stanford POS tagger, the orange labels are from Google NLP API, and purple ones are coming from an internal topic extractor. One of the challeneges for natural language processing, is the fact that each unit is providing isolated information about each token in different formats and currently is really hard to have a query considering labels coming from different processing units. 
 
@@ -126,7 +126,7 @@ X and Y or Z    <=>   ( X and (Y or Z) )
 
 # How to install 
 ```
-pip install tokenregex
+pip install tokenquery
 ```
 It has been test to work on python 2.7+ 
 
@@ -188,9 +188,9 @@ We belive a big portion of NLP information can be expressed in terms of labels o
 
 #### Detecting name of painters
 ```
-from tokenregex.nlp.tokenizer import Tokenizer
-from tokenregex.nlp.pos_tagger import POSTagger
-from tokenregex.tokenregex import TokenRegex
+from tokenquery.nlp.tokenizer import Tokenizer
+from tokenquery.nlp.pos_tagger import POSTagger
+from tokenquery.tokenquery import TokenQuery
 
 # Penn Tree Bank Tokenizer
 tokenizer = Tokenizer('PTBTokenizer')
@@ -205,7 +205,7 @@ input_tokens = tokenizer.tokenize(input_text)
 input_tokens = pos_tagger.tag(input_tokens)
 
 # token regex to extract name of the painters
-token_regex_1 = TokenRegex('([pos:"NNP"]) [pos:"VBZ"] [/an?/] ["painter"]')
+token_regex_1 = TokenQuery('([pos:"NNP"]) [pos:"VBZ"] [/an?/] ["painter"]')
 token_regex_1.match_tokens(input_tokens)
 
 # lets change the sentence
@@ -217,18 +217,18 @@ input_tokens = pos_tagger.tag(input_tokens)
 token_regex_1.match_tokens(input_tokens)
 
 # Adding possible adjectives
-token_regex_2 = TokenRegex('([pos:"NNP"]) [pos:"VBZ"] [/an?/] [pos:"JJ"]* ["painter"]')
+token_regex_2 = TokenQuery('([pos:"NNP"]) [pos:"VBZ"] [/an?/] [pos:"JJ"]* ["painter"]')
 token_regex_2.match_tokens(input_tokens)
 
 # You can add labels directly
 input_tokens[0].add_a_label('ner', 'PERSON')
 
 # A mixture of labels will give you the same result
-token_regex_3 = TokenRegex('([ner:"PERSON"]) [pos:"VBZ"] [/an?/] [pos:"JJ"]* ["painter"]')
+token_regex_3 = TokenQuery('([ner:"PERSON"]) [pos:"VBZ"] [/an?/] [pos:"JJ"]* ["painter"]')
 token_regex_3.match_tokens(input_tokens)
 
 # To cover names with more tokens
-token_regex_4 = TokenRegex('([ner:"PERSON"]+) [pos:"VBZ"] [/an?/] [pos:"JJ"]* ["painter"]')
+token_regex_4 = TokenQuery('([ner:"PERSON"]+) [pos:"VBZ"] [/an?/] [pos:"JJ"]* ["painter"]')
 token_regex_4.match_tokens(input_tokens)
     
 ```
