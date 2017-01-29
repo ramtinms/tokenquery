@@ -1,15 +1,15 @@
 from distutils.core import setup
 from setuptools import find_packages
 setup(
-    name='tokenregex',
-    packages=find_packages(),  #['tokenregex','tokenregex.models','tokenregex.nlp'], # this must be the same as the name above
-    version='0.1.14',
-    description='NLP at your fingertips',
+    name='tokenquery',
+    packages=find_packages(),
+    version='0.1.0',
+    description='Tokenquery - query language for tokens ',
     author='Ramtin Seraj',
     author_email='mehdizadeh.ramtin@gmail.com',
-    url='https://github.com/ramtinms/tokenregex',
-    download_url='https://github.com/ramtinms/tokenregex/tarball/0.1',
-    keywords=['natural language processing', 'nlp', 'regex', 'tokenizer'], # arbitrary keywords
+    url='https://github.com/ramtinms/tokenquery',
+    download_url='https://github.com/ramtinms/tokenquery/tarball/0.1',
+    keywords=['natural language processing', 'nlp', 'regex', 'regular expressions', 'tokenizer', 'query'],
     classifiers=['Intended Audience :: Information Technology',
                  'Intended Audience :: Science/Research',
                  'Topic :: Scientific/Engineering',
@@ -22,10 +22,11 @@ setup(
                  'Topic :: Text Processing :: Indexing',
                  'Topic :: Text Processing :: Linguistic',
                  ],
-
     install_requires=[
         "requests",
         "nltk",
+        "conllu",
+        "google-api-python-client",
     ],
 
 )

@@ -45,7 +45,7 @@ Likewise regular expressions, you can use quantifiers to have more compact queri
 
 ## Capturing Groups
 Like reguar expressions, you can define capturing groups by parentheses. 
-for example `([expr_for_token1]+) [expr_for_token2] [expr_for_token3]` returns a group containing sequence of tokens with satisfies the condition provided by expr_for_token1. Hence, `([expr_for_token1]+) [expr_for_token2] ([expr_for_token3])` returns two groups (`chunk1` and `chunk2`) with a list of tokens matched inside each parentheses. You can also use named capturing by using `(?name <desired_pattern>)`. For example `(?name [expr_for_token1])` captures results under the name of `name`.
+for example `([expr_for_token1]+) [expr_for_token2] [expr_for_token3]` returns a group containing sequence of tokens with satisfies the condition provided by expr_for_token1. Hence, `([expr_for_token1]+) [expr_for_token2] ([expr_for_token3])` returns two groups (`chunk1` and `chunk2`) with a list of tokens matched inside each parentheses. You can also use named capturing by using `(name <desired_pattern>)`. For example `(name [expr_for_token1])` captures results under the name of `name`.
 If you don't provide any, it will capture all as a single group; in other words,  `[expr_for_token1]+ [expr_for_token2] [expr_for_token3]` is equal to `([expr_for_token1]+ [expr_for_token2] [expr_for_token3])`.
 
 ## Token Expression
