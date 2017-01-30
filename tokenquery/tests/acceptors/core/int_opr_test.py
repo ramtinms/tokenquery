@@ -1,9 +1,9 @@
 import unittest
-from tokenquery.acceptors.int import int_value
-from tokenquery.acceptors.int import int_ne
-from tokenquery.acceptors.int import int_e
-from tokenquery.acceptors.int import int_l
-from tokenquery.acceptors.int import int_le
+from tokenquery.acceptors.int_opr import int_value
+from tokenquery.acceptors.int_opr import int_ne
+from tokenquery.acceptors.int_opr import int_e
+from tokenquery.acceptors.int_opr import int_l
+from tokenquery.acceptors.int_opr import int_le
 
 
 class TestIntegerCoreAcceptorsClass(unittest.TestCase):

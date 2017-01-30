@@ -1,11 +1,11 @@
 from tokenquery.models.fsa import StateMachine
 from tokenquery.models.fsa import State
 from tokenquery.models.stack import Stack
-from tokenquery.acceptors.core.string import str_eq
-from tokenquery.acceptors.core.string import str_reg
-from tokenquery.acceptors.core.string import str_len
-from tokenquery.acceptors.core.int import *
-from tokenquery.acceptors.core.web import *
+from tokenquery.acceptors.core.string_opr import str_eq
+from tokenquery.acceptors.core.string_opr import str_reg
+from tokenquery.acceptors.core.string_opr import str_len
+from tokenquery.acceptors.core.int_opr import *
+from tokenquery.acceptors.core.web_opr import *
 
 
 class TokenQuery:

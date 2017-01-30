@@ -1,7 +1,7 @@
 import unittest
-from tokenquery.acceptors.string import str_eq
-from tokenquery.acceptors.string import str_reg
-from tokenquery.acceptors.string import str_len
+from tokenquery.acceptors.string_opr import str_eq
+from tokenquery.acceptors.string_opr import str_reg
+from tokenquery.acceptors.string_opr import str_len
 
 
 class TestStringCoreAcceptorsClass(unittest.TestCase):

@@ -1,6 +1,6 @@
 import unittest
-from tokenquery.acceptors.web import web_is_url
-from tokenquery.acceptors.web import web_is_email
+from tokenquery.acceptors.web_opr import web_is_url
+from tokenquery.acceptors.web_opr import web_is_email
 
 
 class TestWebCoreAcceptorsClass(unittest.TestCase):
