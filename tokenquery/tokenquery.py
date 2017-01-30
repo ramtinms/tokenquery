@@ -26,12 +26,21 @@ class TokenQuery:
     def match_tokens(self, input_tokens):
         final_results = []
         # ranges = {}
+        last_matched = -1
         for start_point in range(len(input_tokens)):
-            sub_input_tokens = input_tokens[start_point:]
-            result_set = self.machine.runAll(sub_input_tokens)
-            if result_set:
-
-                final_results += result_set
+            # skip from the matched ones
+            if start_point > last_matched:
+                sub_input_tokens = input_tokens[start_point:]
+                result_set = self.machine.runAll(sub_input_tokens)
+                if result_set:
+                    final_results += result_set
+                    for result_item in result_set:
+                        for group_key in result_item:
+                            group = result_item[group_key]
+                            if len(group) > 0:
+                                last_matched_token = group[-1].get_token_id()
+                                if last_matched_token > last_matched:
+                                    last_matched = last_matched_token
 
         # change into max match
 

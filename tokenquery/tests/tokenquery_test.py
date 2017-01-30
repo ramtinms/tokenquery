@@ -39,9 +39,8 @@ class TestTokenQueryClass(unittest.TestCase):
         test_cases = []
         desired_results = []
         test_cases += ['[ner:"PERSON"]+ [pos:"VBZ"] [/an?/] [/artist|painter/]']
-        desired_results.append([{'chunk 1': input_tokens[:4]},
-                                {'chunk 1': input_tokens[5:10]},
-                                {'chunk 1': input_tokens[6:10]}]
+        desired_results.append([{'chunk 1': input_tokens[:4]},  # David is a painter
+                                {'chunk 1': input_tokens[5:10]}]  # Ramtin Muller is an artist
                                )
 
         # desired_results
@@ -49,10 +48,8 @@ class TestTokenQueryClass(unittest.TestCase):
         desired_results.append([])
 
         test_cases += ['[ner:"PERSON"]? [pos:/V.*/]']
-        desired_results.append([{'chunk 1': input_tokens[:2]},
-                                {'chunk 1': input_tokens[1:2]},
-                                {'chunk 1': input_tokens[6:8]},
-                                {'chunk 1': input_tokens[7:8]}]
+        desired_results.append([{'chunk 1': input_tokens[:2]},  # David is
+                                {'chunk 1': input_tokens[6:8]}]  # Muller is
                                )
 
         for test_case, desired_result in zip(test_cases, desired_results):
@@ -80,16 +77,13 @@ class TestTokenQueryClass(unittest.TestCase):
 
         test_cases = []
         desired_results = []
-        test_cases += ['[ner:str_eq(PERSON)]*']
+        test_cases += ['[ner:str_eq(PERSON)]*']  # ???
         desired_results.append([{'chunk 1': input_tokens[:1]},  # David
                                 {'chunk 1': input_tokens[5:7]},  # Ramtin Muller
-                                {'chunk 1': input_tokens[6:7]},  # Muller
-                                {'chunk 1': input_tokens[11:14]},  # Sir Isaac Newton
-                                {'chunk 1': input_tokens[12:14]},  # Isaac Newton
-                                {'chunk 1': input_tokens[13:14]}]  # Newton
+                                {'chunk 1': input_tokens[11:14]}]  # Sir Isaac Newton
                                )
 
-        test_cases += ['[ner:str_eq(PERSON)]?']
+        test_cases += ['[ner:str_eq(PERSON)]?']  # ???
         desired_results.append([{'chunk 1': input_tokens[:1]},  # David
                                 {'chunk 1': input_tokens[5:6]},  # Ramtin
                                 {'chunk 1': input_tokens[6:7]},  # Muller
@@ -100,27 +94,19 @@ class TestTokenQueryClass(unittest.TestCase):
 
         test_cases += ['[ner:str_eq(PERSON)]+']
         desired_results.append([{'chunk 1': input_tokens[:1]},  # David
-
                                 {'chunk 1': input_tokens[5:7]},  # Ramtin Muller
-                                {'chunk 1': input_tokens[6:7]},  # Muller
-
-                                {'chunk 1': input_tokens[11:14]},  # Sir Isaac Newton
-                                {'chunk 1': input_tokens[12:14]},  # Isaac Newton
-                                {'chunk 1': input_tokens[13:14]}]  # Newton
+                                {'chunk 1': input_tokens[11:14]}]  # Sir Isaac Newton
                                )
 
         test_cases += ['[ner:str_eq(PERSON)]{2}']
         desired_results.append([{'chunk 1': input_tokens[5:7]},  # Ramtin Muller
-                                {'chunk 1': input_tokens[11:13]},  # Sir Isaac
-                                {'chunk 1': input_tokens[12:14]}]  # Isaac Newton
+                                {'chunk 1': input_tokens[11:13]}]  # Sir Isaac
                                )
 
-        test_cases += ['[ner:str_eq(PERSON)]{1,2}']  # ? where is Ramtin
+        test_cases += ['[ner:str_eq(PERSON)]{1,2}']
         desired_results.append([{'chunk 1': input_tokens[:1]},  # David
                                 {'chunk 1': input_tokens[5:7]},  # Ramtin Muller
-                                {'chunk 1': input_tokens[6:7]},  # Muller
                                 {'chunk 1': input_tokens[11:13]},  # Sir Isaac
-                                {'chunk 1': input_tokens[12:14]},  # Isaac Newton
                                 {'chunk 1': input_tokens[13:14]}]  # Newton
                                )
 
@@ -154,6 +140,7 @@ class TestTokenQueryClass(unittest.TestCase):
         input_tokens[11].add_a_label('ner', 'PERSON')
         input_tokens[12].add_a_label('ner', 'PERSON')
         input_tokens[13].add_a_label('ner', 'PERSON')
+
 
         test_cases = []
         desired_results = []
