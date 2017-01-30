@@ -27,6 +27,11 @@ class Tokenizer:
         else:
             print ("Unrecognized tokenizer type : setting back to default (PTBTokenizer)")
             self.tokenizer_type = "PTBTokenizer"
+            try:
+                word_tokenize('test word tokenizer')
+            except LookupError:
+                # if model does not exit load it first
+                nltk.download('punkt')
 
     def tokenize(self, text):
         """
