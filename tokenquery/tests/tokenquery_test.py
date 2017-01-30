@@ -141,49 +141,104 @@ class TestTokenQueryClass(unittest.TestCase):
         input_tokens[12].add_a_label('ner', 'PERSON')
         input_tokens[13].add_a_label('ner', 'PERSON')
 
-
         test_cases = []
         desired_results = []
 
         test_cases += ['[ner:str_eq(PERSON)]+ [pos:str_eq(VBZ)] [/an?/] [str_eq(painter)]']
-        test_cases += ['[ner:str_eq(PERSON)]+ [pos:str_eq(VBZ)] [/an?/&"a"] [str_eq(painter)]']
-        test_cases += ['[ner:str_eq(PERSON)]+ [pos:str_eq(VBZ)] [/an?/&pos:"DT"] [str_eq(painter)]']
-        test_cases += ['[ner:str_eq(PERSON)]+ [pos:str_eq(VBZ)] [/an?/&pos:str_eq(DT)] [str_eq(painter)]']
+        desired_results.append([{'chunk 1': input_tokens[0:4]}]  # David is a painter
+                               )
 
+        test_cases += ['[ner:str_eq(PERSON)]+ [pos:str_eq(VBZ)] [/an?/] [str_eq(painter)|str_eq(artist)]']
+        desired_results.append([{'chunk 1': input_tokens[0:4]},  # David is a painter
+                                {'chunk 1': input_tokens[5:10]}]  # Ramtin Muller is an artist
+                               )
+
+        test_cases += ['[ner:str_eq(PERSON)]+ [pos:str_eq(VBZ)] [/an?/] [(str_eq(painter)&str_reg(paint.*))|str_eq(artist)]']
+        desired_results.append([{'chunk 1': input_tokens[0:4]},  # David is a painter
+                                {'chunk 1': input_tokens[5:10]}]  # Ramtin Muller is an artist
+                               )
+
+        test_cases += ['[ner:str_eq(PERSON)]+ [pos:str_eq(VBZ)] [/an?/&"a"] [str_eq(painter)]']
+        desired_results.append([{'chunk 1': input_tokens[0:4]}]  # David is a painter
+                               )
+
+        test_cases += ['[ner:str_eq(PERSON)]+ [pos:str_eq(VBZ)] [/an?/&"an"] [str_eq(painter)]']
+        desired_results.append([])
+
+        test_cases += ['[ner:str_eq(PERSON)]+ [pos:str_eq(VBZ)] [/an?/&pos:"DT"] [str_eq(painter)]']
+        desired_results.append([{'chunk 1': input_tokens[0:4]}]  # David is a painter
+                               )
+
+        test_cases += ['[ner:str_eq(PERSON)]+ [pos:str_eq(VBZ)] [/an?/&pos:str_eq(DT)] [str_eq(painter)]']
+        desired_results.append([{'chunk 1': input_tokens[0:4]}]  # David is a painter
+                               )
+
+        # TODO add more test cases
+        for test_case, desired_result in zip(test_cases, desired_results):
+            # print('<>'*30)
+            # print (test_case)
+            # print('<>'*20)
+            # unit = TokenQuery(test_case, verbose=True)
+            unit = TokenQuery(test_case)
+            result = unit.match_tokens(input_tokens)
+            # self.show_results(result)
+            self.assert_result(result, desired_result)
 
     def test_capturing(self):
+        t = Tokenizer()
+        input_tokens = t.tokenize('David is a painter and Ramtin Muller is an artist. Sir Isaac Newton ...')
+        input_tokens[0].add_a_label('ner', 'PERSON')
+        input_tokens[1].add_a_label('pos', 'VBZ')
+        input_tokens[2].add_a_label('pos', 'DT')
+        input_tokens[5].add_a_label('ner', 'PERSON')
+        input_tokens[6].add_a_label('ner', 'PERSON')
+        input_tokens[7].add_a_label('pos', 'VBZ')
+        input_tokens[11].add_a_label('ner', 'PERSON')
+        input_tokens[12].add_a_label('ner', 'PERSON')
+        input_tokens[13].add_a_label('ner', 'PERSON')
+
         test_cases = []
         desired_results = []
         test_cases += ['[ner:"PERSON"]+ [pos:"VBZ"] [/an?/] ["painter"]']
+        desired_results.append([{'chunk 1': input_tokens[0:4]}]  # David is a painter
+                               )
+
         test_cases += ['([ner:"PERSON"]+) [pos:"VBZ"] [/an?/] ["painter"]']
+        desired_results.append([{'chunk 1': input_tokens[0:1]}]  # David
+                               )
+
         test_cases += ['([ner:"PERSON"]+ [pos:"VBZ"]) [/an?/] ["painter"]']
+        desired_results.append([{'chunk 1': input_tokens[0:2]}]  # chunk1: David is
+                               )
+
         test_cases += ['([ner:"PERSON"]+ [pos:"VBZ"] )[/an?/] ["painter"]']
+        desired_results.append([{'chunk 1': input_tokens[0:2]}]  # chunk1: David is
+                               )
+
         test_cases += ['[ner:"PERSON"]+ ([pos:"VBZ"] [/an?/] ["painter"])']
+        desired_results.append([{'chunk 1': input_tokens[1:4]}]  # chunk1: is a painter
+                               )
 
-    def test_by_pos_tag(self):
-        tokenizer = Tokenizer('PTBTokenizer')
-        pos_tagger = POSTagger()
-        test_text = """
-                    I am a painter, you're also a painter!
-                    """
+        test_cases += ['(person [ner:"PERSON"]+) (rest [pos:"VBZ"] [/an?/] ["painter"])']
+        desired_results.append([{'person': input_tokens[0:1], 'rest': input_tokens[1:4]}]  # person: David rest :is a painter
+                               )
 
-        tokens = tokenizer.tokenize(test_text)
-        tokens = pos_tagger.tag(tokens)
+        test_cases += ['(person [ner:"PERSON"])+ (rest [pos:"VBZ"] [/an?/] ["painter"|"artist"])']
+        desired_results.append([{'person': input_tokens[0:1], 'rest': input_tokens[1:4]},  # person: David rest :is a painter
+                                {'person': input_tokens[5:7], 'rest': input_tokens[7:10]}  # person: Ramtin Muller rest :is an artist
+                                ]
+                               )
 
-        # test_tokenregex_1 = '[/.*/] [pos:"VBP"] [/an?/] ["painter"]'
-        # unit = TokenRegex(test_tokenregex_1)
-        # unit.machine.print_state_machine()
-
-        # print unit.match_tokens(tokens)
-
-        # test_tokenregex_2 = '([/.*/]) [pos:"VBP"] [/an?/] ["painter"]'
-        # unit = TokenRegex(test_tokenregex_1)
-        # unit.machine.print_state_machine()
-
-        # print unit.match_tokens(tokens)
-
-        # self.assertListEqual(expected_tags, [token.get_a_label('POS') for token in tokens])
-
+        for test_case, desired_result in zip(test_cases, desired_results):
+            # print('<>'*30)
+            # print (test_case)
+            # print('<>'*20)
+            # unit = TokenQuery(test_case, verbose=True)
+            unit = TokenQuery(test_case)
+            # unit.machine.print_state_machine()
+            result = unit.match_tokens(input_tokens)
+            # self.show_results(result)
+            self.assert_result(result, desired_result)
 
 if __name__ == "__main__":
     unittest.main()

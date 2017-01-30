@@ -26,7 +26,7 @@ class State:
             res2 = self.accept(acceptor['opr2'], token)
             return res1 and res2
 
-        elif acceptor['type'] == 'or':
+        elif acceptor['type'] == 'comp_or':
             res1 = self.accept(acceptor['opr1'], token)
             res2 = self.accept(acceptor['opr2'], token)
             return res1 or res2
@@ -47,7 +47,7 @@ class State:
             else:
                 return self.acceptors[acceptor['type']](token_input)
         else:
-            print ("something went wrong! unknown operation")
+            print ("something went wrong! unknown operation {}".format(acceptor['type']))
 
     def next(self, input_token):
         nexts = []
@@ -81,16 +81,15 @@ class StateMachine:
     def runAll(self, inputs):
         captured_dictionary = {}
         captured_info_item = []
-
+        capture_name = self.currentState.capture_name
         curser = 0
         # Stack
-        stack = [(self.currentState, curser, captured_dictionary, captured_info_item)]
+        stack = [(self.currentState, curser, captured_dictionary, captured_info_item, capture_name)]
         groups = []
-        capture_name = self.currentState.capture_name
 
         # push down automata
         while stack and len(stack) < self.max_stack_size:
-            currentState, curser, captured_dictionary, captured_info_item = stack.pop()
+            currentState, curser, captured_dictionary, captured_info_item, capture_name = stack.pop()
             # print (currentState, curser, captured_dictionary, captured_info_item)
             # if captured_info_item:
             #     print ('capturer : ', ' '.join([token.get_text() for token in captured_info_item]))
@@ -108,16 +107,25 @@ class StateMachine:
                             if captured_dictionary not in groups:
                                 groups.append(captured_dictionary)
                         else:
-                            if next.capture_name and next.capture_name == capture_name:
+                            # print (token.get_text(), capture_name, next.capture_name, captured_info_item)
+                            if next.capture_name and not capture_name:
+                                # starting mode
                                 if token not in captured_info_item:
                                     captured_info_item.append(token)
-                            elif captured_info_item:
-                                captured_dictionary[capture_name] = captured_info_item
-                                captured_info_item = []
-                            else:
-                                capture_name = next.capture_name
 
-                            stack.append((next, curser+1, captured_dictionary, captured_info_item))
+                            elif next.capture_name and next.capture_name == capture_name:
+                                if token not in captured_info_item:
+                                    captured_info_item.append(token)
+
+                            elif next.capture_name != capture_name:
+                                if captured_info_item:
+                                    captured_dictionary[capture_name] = captured_info_item
+                                    captured_info_item = []
+                                if next.capture_name:
+                                    captured_info_item.append(token)
+
+                            capture_name = next.capture_name
+                            stack.append((next, curser+1, captured_dictionary, captured_info_item, capture_name))
             else:
                 if currentState.is_final:
                     if captured_info_item:

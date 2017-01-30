@@ -178,7 +178,43 @@ class TokenQuery:
                     elif next_char == "!":
                         not_mode = True
 
-                    elif next_char == ")" or next_char == "]":
+                    elif next_char == ")":
+                        while(parser_stack.size() > 2):
+                            item2 = parser_stack.pop()
+                            op = parser_stack.pop()
+                            item1 = parser_stack.pop()
+                            if op == '&':
+                                new_acceptor = {'opr1': item1,
+                                                'opr2': item2,
+                                                'type': 'comp_and'}
+                            if op == "|":
+                                new_acceptor = {'opr1': item1,
+                                                'opr2': item2,
+                                                'type': 'comp_or'}
+
+                            if parser_stack.size() == 0:
+                                parser_stack.push(new_acceptor)
+                                break
+
+                            if parser_stack.peek() == '(':
+                                parser_stack.pop()
+                                parser_stack.push(new_acceptor)
+                                break
+
+                            parser_stack.push(new_acceptor)
+
+                        if parser_stack.size() != 1:
+                            raise ValueError('Parssing error! parser stack: {} .'.format(parser_stack))
+
+                        # start of a token
+                        if next_char == "]":
+                            parsed.append({'type': 'segment', 'value': active_operation})
+                            capturing_inside_a_token_mode = False
+                            # reset capturer
+                            capturer = ""
+                            continue
+
+                    elif next_char == "]":
                         while(parser_stack.size() > 2):
                             item2 = parser_stack.pop()
                             op = parser_stack.pop()
@@ -207,14 +243,10 @@ class TokenQuery:
                             raise ValueError('Parssing error! parser stack: {} .'.format(parser_stack))
 
                         active_operation = parser_stack.pop()
-
-                        # start of a token
-                        if next_char == "]":
-                            parsed.append({'type': 'segment', 'value': active_operation})
-                            capturing_inside_a_token_mode = False
-                            # reset capturer
-                            capturer = ""
-                            continue
+                        parsed.append({'type': 'segment', 'value': active_operation})
+                        capturing_inside_a_token_mode = False
+                        capturer = ""
+                        continue
 
                     # start of an expression
                     else:
@@ -246,7 +278,7 @@ class TokenQuery:
                     continue
 
                 if capture_mode_name != None:
-                    if next_char in ["?", "*", "+", "{", "", " ", "(", ")", "["]:
+                    if next_char in ["(", " ", "["]:
                         if capture_mode_name:
                             name = capture_mode_name
                         else:
@@ -279,6 +311,7 @@ class TokenQuery:
 
                 if next_char == ")":
                     parsed.append({'type': 'capture', 'value': 'Off'})
+                    capture_mode_name = None
 
                 if next_char == "[":
                     parser_stack = Stack()
@@ -323,6 +356,9 @@ class TokenQuery:
                 if item['value'] == "On":
                     # capture_mode = True
                     capture_name = item['name']
+                    # fix start state capture mode
+                    if len(states) == 1:
+                        states[0].capture_name = capture_name
                     no_capture_at_all = False
                 else:
                     capture_name = None
