@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from tokenquery.acceptors.core.string import str_reg
+from tokenquery.acceptors.core.string_opr import str_reg
 
 
 def web_is_url(token_input):
