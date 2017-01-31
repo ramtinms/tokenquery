@@ -27,6 +27,7 @@ setup(
         "nltk",
         "conllu",
         "google-api-python-client",
+        "sklearn",
     ],
 
 )

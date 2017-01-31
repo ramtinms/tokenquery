@@ -15,7 +15,7 @@ def change_string_to_vector(string):
     return np.array(vector).reshape(1, -1)
 
 
-def cos_sim(token_input, operation_input):
+def vec_cos_sim(token_input, operation_input):
     operation_string = None
     ref_vector_string = None
     cond_value_string = None
@@ -57,7 +57,7 @@ def cos_sim(token_input, operation_input):
         print ('Problem with the operation input')
 
 
-def cos_dist(token_input, operation_input):
+def vec_cos_dist(token_input, operation_input):
     operation_string = None
     ref_vector_string = None
     cond_value_string = None
@@ -99,7 +99,7 @@ def cos_dist(token_input, operation_input):
         print ('Problem with the operation input')
 
 
-def man_dist(token_input, operation_input):
+def vec_man_dist(token_input, operation_input):
     operation_string = None
     ref_vector_string = None
     cond_value_string = None

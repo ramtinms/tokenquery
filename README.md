@@ -92,6 +92,7 @@ If you want to find tokens that matches a regex you can have your regex inside `
 
 #### Web
 This package provides operations for capturing meaningful web patterns.
+
 | operation | description | examples | 
 | ----  | ---- | ---- |
 | `web_is_url` | the string is a web url  | `[text:web_is_url()]` , `[freebase_id:web_is_url()]`|
@@ -111,6 +112,15 @@ This package provides operations for working with date and time info in iso form
 | `date_y_is` | the year of the date in iso format is equal to the month in extra setting | `[date:date_y_is(2008)]` |
 | `date_m_is` | the month of the date in iso format is equal to the month in extra setting | `[date:date_m_is(9)]`,  `[date:date_m_is(09)]`|
 | `date_d_is` | the day of the date in iso format is equal to the month in extra setting | `[date:date_y_is(15)]` |
+
+#### Vector 
+
+| operation | description | examples | 
+| ----  | ---- | ---- |
+| `vec_cos_sim` | cosine similarity between two vectors  | `[word2vec:vec_cos_sim([1, 0, -2, 1.5]>0.5)]`|
+| `vec_cos_dist` | cosine distance between two vectors | `[word2vec:vec_cos_dist([1, 0, -2, 1.5]==0)]` |
+| `vec_man_dist` | manhattan distance between two vectors | `[word2vec:vec_man_dist([1, 0, -2, 1.5]>=10)]` |
+
 
 ## compound expressions
 For each token is possible to compound several basic expressions to support more complex patterns. Compounding is done using `!` (not), `&` (and) and `|` (or) symbols. For example, `[!pos:str_reg(V.*)]` means any token that it is not a verb. 
@@ -205,8 +215,8 @@ input_tokens = tokenizer.tokenize(input_text)
 input_tokens = pos_tagger.tag(input_tokens)
 
 # token regex to extract name of the painters
-token_regex_1 = TokenQuery('([pos:"NNP"]) [pos:"VBZ"] [/an?/] ["painter"]')
-token_regex_1.match_tokens(input_tokens)
+token_query_1 = TokenQuery('([pos:"NNP"]) [pos:"VBZ"] [/an?/] ["painter"]')
+token_query_1.match_tokens(input_tokens)
 
 # lets change the sentence
 input_text = 'David is a famous painter and I work as a writer.'
@@ -214,21 +224,21 @@ input_tokens = tokenizer.tokenize(input_text)
 input_tokens = pos_tagger.tag(input_tokens)
 
 # because of `famous` now your token regex 1 isn't working anymore
-token_regex_1.match_tokens(input_tokens)
+token_query_1.match_tokens(input_tokens)
 
 # Adding possible adjectives
-token_regex_2 = TokenQuery('([pos:"NNP"]) [pos:"VBZ"] [/an?/] [pos:"JJ"]* ["painter"]')
-token_regex_2.match_tokens(input_tokens)
+token_query_2 = TokenQuery('([pos:"NNP"]) [pos:"VBZ"] [/an?/] [pos:"JJ"]* ["painter"]')
+token_query_2.match_tokens(input_tokens)
 
 # You can add labels directly
 input_tokens[0].add_a_label('ner', 'PERSON')
 
 # A mixture of labels will give you the same result
-token_regex_3 = TokenQuery('([ner:"PERSON"]) [pos:"VBZ"] [/an?/] [pos:"JJ"]* ["painter"]')
-token_regex_3.match_tokens(input_tokens)
+token_query_3 = TokenQuery('([ner:"PERSON"]) [pos:"VBZ"] [/an?/] [pos:"JJ"]* ["painter"]')
+token_query_3.match_tokens(input_tokens)
 
 # To cover names with more tokens
-token_regex_4 = TokenQuery('([ner:"PERSON"]+) [pos:"VBZ"] [/an?/] [pos:"JJ"]* ["painter"]')
-token_regex_4.match_tokens(input_tokens)
+token_query_4 = TokenQuery('([ner:"PERSON"]+) [pos:"VBZ"] [/an?/] [pos:"JJ"]* ["painter"]')
+token_query_4.match_tokens(input_tokens)
     
 ```
