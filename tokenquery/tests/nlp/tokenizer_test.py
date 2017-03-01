@@ -1,5 +1,5 @@
 import unittest
-from tokenregex.nlp.tokenizer import Tokenizer
+from tokenquery.nlp.tokenizer import Tokenizer
 
 
 class TestTokenizer(unittest.TestCase):

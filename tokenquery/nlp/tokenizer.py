@@ -1,6 +1,6 @@
-
+import nltk
 from nltk.tokenize import word_tokenize
-from tokenregex.models.token import Token
+from tokenquery.models.token import Token
 from nltk.tokenize.regexp import RegexpTokenizer
 from nltk.tokenize import WhitespaceTokenizer
 
@@ -25,8 +25,12 @@ class Tokenizer:
         if tokenizer_type in ['SpaceTokenizer', 'NLTKWhiteSpaceTokenizer', 'PTBTokenizer']:
             self.tokenizer_type = tokenizer_type
         else:
-            print "Unrecognized tokenizer type : setting back to default (PTBTokenizer)"
+            print ("Unrecognized tokenizer type : setting back to default (PTBTokenizer)")
             self.tokenizer_type = "PTBTokenizer"
+        try:
+            nltk.data.find('punkt.zip')
+        except LookupError:
+            nltk.download('punkt')
 
     def tokenize(self, text):
         """
@@ -99,4 +103,3 @@ class Tokenizer:
         assert len(spans) == len(tokens)
 
         return zip(tokens, spans)
-

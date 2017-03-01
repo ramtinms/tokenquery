@@ -1,3 +1,4 @@
+import nltk
 from nltk import pos_tag
 
 
@@ -5,6 +6,12 @@ class POSTagger:
     """
         NLTK pos tagger
     """
+
+    def __init__(self):
+        try:
+            nltk.data.find('taggers/averaged_perceptron_tagger/averaged_perceptron_tagger.pickle')
+        except LookupError:
+            nltk.download('averaged_perceptron_tagger')
 
     def tag(self, tokens):
         """
