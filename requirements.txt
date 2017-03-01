@@ -1,4 +1,5 @@
 nltk
 conllu
 google-api-python-client
+scipy
 sklearn
