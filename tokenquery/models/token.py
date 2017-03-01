@@ -1,3 +1,6 @@
+import json
+
+
 class Token:
     def __init__(self, token_id, token_text, span_start, span_end):
         self.token_id = token_id
@@ -38,3 +41,13 @@ class Token:
         print ('span_end', self.span_end)
         for label in self.labels:
             print (label, self.labels[label])
+
+    def json(self):
+        data = {'token_id': self.token_id,
+                'token_text': self.token_text,
+                'span_start': self.span_start,
+                'span_end': self.span_end,
+                'labels': self.labels
+                }
+
+        return json.load(data)

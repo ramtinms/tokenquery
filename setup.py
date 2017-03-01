@@ -3,7 +3,7 @@ from setuptools import find_packages
 setup(
     name='tokenquery',
     packages=find_packages(),
-    version='0.1.0',
+    version='0.1.1',
     description='Tokenquery - query language for tokens ',
     author='Ramtin Seraj',
     author_email='mehdizadeh.ramtin@gmail.com',
